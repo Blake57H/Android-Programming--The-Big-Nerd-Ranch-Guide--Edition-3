@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">AndroidProgrammingBook02</string>
+    <string name="crime_title_hint">Enter a title for the crime</string>
+    <string name="crime_title_label">Title</string>
+    <string name="crime_detail_label">Details</string>
+    <string name="crime_solved_label">Solved</string>
+    <string name="crime_severity_title">Crime Severity: </string>
+    <string name="crime_severity_level0">Normal</string>
+    <string name="crime_severity_level1">Needs Police</string>
+    <string name="listViewText_crime_title">Crime Title</string>
+    <string name="listViewText_crime_date">Crime Date</string>
+    <string name="button_call_police">Call Police</string>
+    <string name="crime_solved_imageView_desc">Crime Solved</string>
+    <string name="jump_to_start_button">Jump to start</string>
+    <string name="jump_to_end_button">Jump to end</string>
+    <string name="date_picker_title">Date of crime</string>
+    <string name="time_picker_title">Time of crime</string>
+    <string name="new_crime">New Crime</string>
+    <string name="show_subtitle">Show Subtitle</string>
+    <string name="hide_subtitle">Hide Subtitle</string>
+    <string name="deprecated_subtitle_format">%1$d crimes</string>
+    <string name="button_delete_crime">Delete Crime</string>
+    <string name="button_call_police_click">Calling police for </string>
+    <string name="dialog_failed_to_create_crime_title">Failed to create a new crime</string>
+    <string name="no_crime_add_one_textview_text">Currently there is no crime, you can…</string>
+    <string name="no_crime_add_one_button">Add a Crime</string>
+    <string name="choose_suspect_button">Choose Suspect</string>
+    <string name="call_suspect_button">Call Suspect</string>
+    <string name="send_crime_report_button">Send Crime Report</string>
+    <string name="crime_report_body">%1$s!
+        The crime was discovered on %2$s. %3$s, and %4$s</string>
+    <string name="crime_report_solved">The case is solved</string>
+    <string name="crime_report_unsolved">The case is not solved</string>
+    <string name="crime_report_suspect">the suspect is %s.</string>
+    <string name="crime_report_noSuspect">there is no suspect</string>
+    <string name="crime_report_subject">CriminalIntelligent Crime Report</string>
+    <string name="send_report_via">Send crime report via…</string>
+    <string name="dialog_fragment_no_photo">No Photo</string>
+
+
+    <string name="error_crime_fragment_on_activity_result_code">
+        Unexpected error in CrimeFragment->onActivityResult request code
+    </string>
+
+    <plurals name="subtitle_plural">
+        <item quantity="one">%1$d crime</item>
+        <item quantity="other">%1$d crimes</item>
+    </plurals>
+
+</resources>
