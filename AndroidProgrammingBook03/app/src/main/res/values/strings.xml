@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AndroidProgrammingBook03</string>
+
+    <string name="playback_speed_textview">Playback Speed: %d%%</string>
+</resources>
