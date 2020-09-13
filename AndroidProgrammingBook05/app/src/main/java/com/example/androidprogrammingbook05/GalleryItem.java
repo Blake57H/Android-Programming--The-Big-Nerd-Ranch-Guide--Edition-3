@@ -1,5 +1,7 @@
 package com.example.androidprogrammingbook05;
 
+import android.net.Uri;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -11,6 +13,17 @@ public class GalleryItem {
     private String mID;
     @SerializedName("url_s")
     private String mUrl;
+    @SerializedName("owner")
+    private String mOwner;
+
+    public String getOwner() {
+        return mOwner;
+    }
+
+    public void setOwner(String owner) {
+        mOwner = owner;
+    }
+
 
     public String getCaption() {
         return mCaption;
@@ -39,6 +52,14 @@ public class GalleryItem {
     @Override
     public String toString() {
         return mCaption;
+    }
+
+    public Uri getPhotoPageUri(){
+        return Uri.parse("https://www.flickr.com/photos/")
+                .buildUpon()
+                .appendPath(mOwner)
+                .appendPath(mID)
+                .build();
     }
 }
 

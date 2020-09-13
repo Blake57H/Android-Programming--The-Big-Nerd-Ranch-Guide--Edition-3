@@ -1,5 +1,7 @@
 package com.example.androidprogrammingbook05;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -8,6 +10,7 @@ import android.os.Message;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.collection.LruCache;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,22 +19,27 @@ import java.util.concurrent.ConcurrentMap;
 public class ThumbnailDownloader<T> extends HandlerThread {
     private static final String TAG = "Thumbnailownloader";
     private static final int MESSAGE_DOWNLOAD = 0;
+    private static final int KEY_IMAGE_ID = 1;
 
     private boolean mHasQuit = false;
     private Handler mRequestHandler, mResponseHandler;
     private ConcurrentMap<T, String> mRequestMap = new ConcurrentHashMap<>();
-    private ThumbnailDownloader<T> mThumbnailDownloadListener;
+    private ThumbnailDownloadListener<T> mThumbnailDownloadListener;
+
+    private LruCache<String, Bitmap> mLruCache;
 
     public interface ThumbnailDownloadListener<T> {
         void onThumbnailDownloaded(T target, Bitmap thumbnail);
     }
 
-    public void setThumbnailDownloadListener(ThumbnailDownloader<T> thumbnailDownloadListener) {
+    public void setThumbnailDownloadListener(ThumbnailDownloadListener<T> thumbnailDownloadListener) {
         mThumbnailDownloadListener = thumbnailDownloadListener;
     }
 
-    public ThumbnailDownloader() {
+    public ThumbnailDownloader(Handler responseHandler, int cacheSize) {
         super(TAG);
+        mResponseHandler = responseHandler;
+        mLruCache = new LruCache<String, Bitmap>(cacheSize);
     }
 
     @Override
@@ -46,9 +54,29 @@ public class ThumbnailDownloader<T> extends HandlerThread {
         if (url == null) {
             mRequestMap.remove(target);
         } else {
-            mRequestMap.put(target, url);
-            mRequestHandler.obtainMessage(MESSAGE_DOWNLOAD, target).sendToTarget();
+            Bitmap bitmap = mLruCache.get(url);
+            if (bitmap == null) {
+                mRequestMap.put(target, url);
+                mRequestHandler.obtainMessage(MESSAGE_DOWNLOAD, target).sendToTarget();
+            } else {
+                handleRequest(target, bitmap);
+            }
+
         }
+    }
+
+    public void queueThumbnail(T target, String url, boolean cacheOnlySwitch){
+        if(!cacheOnlySwitch) queueThumbnail(target, url);
+        else{
+            if(mLruCache.get(url) == null){
+
+            }
+        }
+    }
+
+    public Bitmap queueThumbnail(String url){
+        if(url == null) return null;
+        return mLruCache.get(url);
     }
 
     @Override
@@ -69,15 +97,40 @@ public class ThumbnailDownloader<T> extends HandlerThread {
         try {
             final String url = mRequestMap.get(target);
 
-            if(url == null){
+            if (url == null) {
                 return;
             }
 
             byte[] bitmapBytes = new FlickrFetchr().getUrlBytes(url);
             final Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
             Log.i(TAG, "Bitmap created");
-        }catch (IOException ioe){
+
+            mResponseHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mRequestMap.get(target) != url || mHasQuit)
+                        return;
+                    mRequestMap.remove(target);
+                    mLruCache.put(url, bitmap);
+                    mThumbnailDownloadListener.onThumbnailDownloaded(target, bitmap);
+                }
+            });
+        } catch (IOException ioe) {
             Log.e(TAG, "Error downloading image", ioe);
         }
+    }
+
+    private void handleRequest(final T target, final Bitmap cachedBitmap) {
+        mResponseHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mThumbnailDownloadListener.onThumbnailDownloaded(target, cachedBitmap);
+            }
+        });
+    }
+
+    public void clearQueue() {
+        mRequestHandler.removeMessages(MESSAGE_DOWNLOAD);
+        mRequestMap.clear();
     }
 }
