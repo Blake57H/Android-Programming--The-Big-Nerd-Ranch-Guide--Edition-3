@@ -3,24 +3,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <FrameLayout
         android:id="@+id/sky"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.61"
         android:background="@color/blue_sky">
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:id="@+id/sun"
-            android:layout_gravity="center"
-            android:src="@drawable/sun"/>
 
+            <ImageView
+                android:id="@+id/sun"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:src="@drawable/sun"/>
     </FrameLayout>
 
-    <View
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.39"
-        android:background="@color/sea"/>
+        android:background="@color/sea" >
+        <ImageView
+            android:id="@+id/reflect_sun"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/reflected_sun"/>
+    </FrameLayout>
 </LinearLayout>
