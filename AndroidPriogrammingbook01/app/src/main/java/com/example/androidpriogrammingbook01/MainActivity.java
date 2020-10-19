@@ -1,11 +1,14 @@
 package com.example.androidpriogrammingbook01;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -177,6 +180,13 @@ public class MainActivity extends AppCompatActivity {
             mCheatCounter += CheatActivity.isUserCheated(data) ? 1 : 0;
             CheckCheatCount();
         }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@Nullable View parent, @NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
+        Log.d(TAG, "onCreateView() called");
+        return super.onCreateView(parent, name, context, attrs);
     }
 
     private void UpdateQuestion(boolean next, boolean newOne) {
